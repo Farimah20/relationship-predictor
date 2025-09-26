@@ -1,0 +1,45 @@
+<!-- این template پرسشنامه رو نمایش می‌ده. چرا؟ برای ورودی امتیازات با slider Bootstrap. -->
+{% extends 'base.html' %}  <!-- ارث‌بری از base – navbar و CSS. -->
+{% load django_bootstrap5 %}  <!-- لود django-bootstrap5 – اول template، قبل block. -->
+
+{% block content %}  <!-- block محتوای پرسشنامه. -->
+
+<div class="row justify-content-center">  <!-- row وسط‌چین. -->
+    <div class="col-md-10 col-lg-8">  <!-- col responsive – عرض متوسط برای سوالات. -->
+        <div class="card shadow">  <!-- card با سایه. -->
+            <div class="card-header bg-success text-white text-center">  <!-- header سبز. -->
+                <h3>پرسشنامه روابط (۵۹ سوال)</h3>  <!-- عنوان. -->
+                <p class="mb-0">از ۰ (کاملاً مخالف) تا ۴ (کاملاً موافق) امتیاز بدید. هر سوال رو با دقت پاسخ دهید.</p>  <!-- راهنمایی. -->
+            </div>  
+            <div class="card-body">  <!-- body با padding. -->
+                <form method="post" action="{% url 'predict' %}">  <!-- form POST به predict_view. -->
+                    {% csrf_token %}  <!-- توکن امنیت. -->
+                    {% for field in form %}  <!-- loop روی فیلدهای form – sliderها. -->
+                        <div class="mb-3 p-3 border rounded">  <!-- div باکس سوال. -->
+                            <label class="form-label fw-bold" style="text-align: right; font-size: 0.9em;">{{ field.label }}</label>  <!-- لیبل – style RTL برای فارسی. -->
+                            {{ field }}  <!-- فیلد slider. -->
+                            <small class="form-text text-muted d-block">امتیاز فعلی: <span id="score-{{ field.html_name }}">{{ field.value|default:"2" }}</span></small>  <!-- امتیاز real-time. -->
+                            {% if field.errors %}  <!-- شرط خطا. -->
+                                <div class="text-danger small">{{ field.errors }}</div>  <!-- خطا قرمز. -->
+                            {% endif %}  
+                        </div>  
+                    {% endfor %}  <!-- پایان loop. -->
+                    <button type="submit" class="btn btn-success w-100">ارسال و پیش‌بینی</button>  
+                </form>  
+            </div>  
+        </div>  <!-- پایان card. -->
+    </div>  <!-- پایان col. -->
+</div>  <!-- پایان row. -->
+
+<!-- jQuery script برای به‌روز کردن امتیاز slider. -->
+<script>  <!-- اسکریپت. -->
+$(document).ready(function() {  <!-- ready. -->
+    $('.form-range').on('input', function() {  <!-- input event. -->
+        var score = $(this).val();  <!-- مقدار. -->
+        var fieldName = $(this).attr('name');  <!-- name 'q1'. -->
+        var scoreId = 'score-' + fieldName;  <!-- ID span. -->
+        $('#' + scoreId).text(score);  <!-- بروزرسانی. -->
+    });  <!-- پایان. -->
+});  <!-- پایان ready. -->
+</script>  
+{% endblock %}  

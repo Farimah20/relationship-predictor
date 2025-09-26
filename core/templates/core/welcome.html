@@ -1,0 +1,57 @@
+{% extends 'base.html' %}  {# ارث‌بری از base – navbar و CSS. #}
+{% load static %}  {# لود static اگر عکس/JS لازم – اول template. #}
+
+{% block content %}  {# block محتوای صفحه – فقط یکی. #}
+<div class="hero-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(45deg, #667eea 0%, #764ba2 100%); animation: gradientShift 5s ease infinite; z-index: -1;"></div>
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="text-center text-white p-5 rounded shadow-lg bg-white bg-opacity-10">
+        <div class="mb-4">
+            <img src="{% static 'images/Heartbeat.png' %}" alt="زوج با قلب" class="img-fluid couple-sticker animate-pulse" style="width: 300px; height: auto; border-radius: 0; background-color: transparent;">
+        </div>
+        
+        <h1 class="display-3 mb-4 animate-fade-in" style="font-family: 'Vazir', sans-serif; font-size: 4.5rem; font-weight: 800; text-align: center; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">برسی رابطه شما</h1>
+        <p class="lead mb-4 animate-fade-in-delay" style="font-family: 'Vazir', sans-serif; font-size: 1.8rem; font-weight: 700; text-align: center; line-height: 1.5;">به دل سنج خوش آمدید! با پاسخ به ۵۹ سوال روانشناسی معتبر (بر اساس DPS Gottman)، ریسک موفقیت رابطه‌تون رو پیش‌بینی کنید. آماده‌اید بررسی رو شروع کنید؟</p>
+        
+        <a href="{% url 'user_info' %}" class="btn btn-primary btn-lg animate-fade-in-delay-2" style="font-family: 'Vazir', sans-serif; font-size: 1.4rem; font-weight: bold; text-align: center; padding: 15px 30px;">شروع برسی رابطه من</a>
+    </div>
+</div>
+
+<style>
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    .hero-bg {
+        background-size: 400% 400%;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+        animation: fadeIn 1s ease-out;
+    }
+    .animate-fade-in-delay {
+        animation: fadeIn 1s ease-out 0.5s both;
+    }
+    .animate-fade-in-delay-2 {
+        animation: fadeIn 1s ease-out 1s both;
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    .heart-animated {
+        animation: pulse 2s infinite;
+        font-size: 4rem;
+        display: block;
+        margin: 0 auto;
+    }
+    .couple-sticker {
+        animation: pulse 3s infinite;
+    }
+</style>
+{% endblock %}  

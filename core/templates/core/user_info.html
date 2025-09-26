@@ -1,0 +1,41 @@
+<!-- این template فرم اطلاعات شخصی رو نمایش می‌ده. چرا؟ برای جمع‌آوری داده‌ها با UI زیبا و ریسپانسیو. -->
+{% extends 'base.html' %}  <!-- ارث‌بری از base.html – navbar و CSS مشترک. -->
+{% load django_bootstrap5 %}  <!-- لود django-bootstrap5 – برای bootstrap_form و کلاس‌های Bootstrap. -->
+
+{% block content %}  <!-- block content – محتوای خاص این صفحه. -->
+<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center">  <!-- container-fluid full-width, d-flex برای وسط‌چین و min-vh-100 برای ارتفاع کامل. -->
+    <div class="row justify-content-center">  <!-- row Bootstrap – justify-center برای وسط‌چین. -->
+        <div class="col-12 col-md-8 col-lg-12">  <!-- col responsive – col-12 full موبایل، col-md-8 تبلت، col-lg-10 دسکتاپ (۹۰% عرض، بازتر از 6). -->
+            <div class="card shadow p-4 animate-fade-in">  <!-- card Bootstrap با shadow و p-4 padding – animate-fade-in برای انیمیشن ورود. -->
+                <div class="card-header bg-primary text-white text-center">  <!-- header کارت – bg-primary آبی، text-white سفید، text-center وسط‌چین. -->
+                    <h3>ثبت نام</h3>  <!-- عنوان اصلی – h3 برای اندازه مناسب. -->
+                    <p class="mb-0 small">لطفاً اطلاعات خود را کامل وارد کنید.</p>  <!-- زیرعنوان – mb-0 بدون margin-bottom، small کوچک. -->
+                </div>  <!-- پایان header. -->
+                <div class="card-body">  <!-- body کارت – padding اتوماتیک. -->
+                    <!-- نمایش پیام‌ها (success/error از views.py) –feedback کاربر. -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} mb-3">  <!-- alert Bootstrap – tags مثل success/danger. -->
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <form method="post" class="validate-form">  <!-- form POST با class='validate-form' – jQuery فقط این رو چک ایمیل می‌کنه. -->
+                        {% csrf_token %}  <!-- توکن CSRF – امنیت. -->
+                        {% bootstrap_form form %}  <!-- رندر فرم با Bootstrap – فیلدها با form-control. -->
+                        {% if form.errors %}  <!-- شرط نمایش خطاها – feedback فیلد. -->
+                            <div class="alert alert-danger mt-3">  <!-- alert خطر – قرمز برای خطا. -->
+                                <h6>خطاها:</h6>
+                                {% for field, errors in form.errors.items %}  <!-- loop فیلدها. -->
+                                    <p><strong>{{ field }}:</strong> {{ errors|join:", " }}</p>  <!-- نمایش خطا – join برای چند خطا. -->
+                                {% endfor %}
+                            </div>  <!-- پایان alert. -->
+                        {% endif %}  <!-- پایان شرط. -->
+                        <button type="submit" class="btn btn-primary w-100 mt-3">ثبت</button>  <!-- دکمه submit – btn-primary آبی، w-100 عرض کامل، mt-3 فاصله. -->
+                    </form>  <!-- پایان form. -->
+                </div>  <!-- پایان body. -->
+            </div>  <!-- پایان card. -->
+        </div>  <!-- پایان col. -->
+    </div>  <!-- پایان row. -->
+</div>  <!-- پایان container-fluid. -->
+{% endblock %}  <!-- پایان block. -->

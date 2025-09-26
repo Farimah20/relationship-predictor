@@ -1,0 +1,62 @@
+<!-- این template نتایج پیش‌بینی رو نمایش می‌ده. چرا؟ برای متن‌ها، فیدبک، و نمودار با UI زیبا. -->
+{% extends 'base.html' %}  <!-- ارث‌بری از base – navbar و CSS. -->
+
+{% block content %}  <!-- block نتایج. -->
+<div class="row justify-content-center">  <!-- row وسط‌چین. -->
+    <div class="col-md-10">  <!-- col متوسط. -->
+        <div class="card shadow animate-fade-in">  <!-- card با سایه – animate-fade-in برای ورود. -->
+            <div class="card-header bg-info text-white text-center">  <!-- header آبی – bg-info اطلاعات. -->
+                <h3>نتایج برسی رابطه</h3>  <!-- عنوان. -->
+                <p class="mb-0">بر اساس پاسخ‌های شما و مدل هوش مصنوعی</p>  <!-- توضیح. -->
+            </div>  <!-- پایان header. -->
+            <div class="card-body text-center">  <!-- body با text-center برای وسط‌چین. -->
+                <!-- نمایش پیام‌ها (error/success از views.py) – چرا؟ feedback. -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} mb-3">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <!-- فیدبک شخصی‌سازی‌شده – بر اساس prob. -->
+                {% if feedback %}
+                    <div class="alert alert-{% if prob < 50 %}danger{% elif prob < 70 %}warning{% else %}success{% endif %} mb-3 animate-fade-in-delay">  <!-- alert رنگی بر اساس ریسک – danger قرمز، warning زرد، success سبز. -->
+                        <h5>توصیه ای برای  شما :</h5>  <!-- زیرعنوان. -->
+                        <p>{{ feedback }}</p>  <!-- متن فیدبک از view – مثل "رابطه‌تون خیلی قویه!". -->
+                        <p>{{ mbti_feedback }}</p>
+                    </div>  <!-- پایان alert فیدبک. -->
+                {% endif %}  <!-- شرط فیدبک. -->
+                
+                <!-- لیست نتایج (از view: results list). -->
+                <div class="alert alert-info mb-4">  <!-- alert آبی – mb-4 فاصله. -->
+                    <h5>جزئیات:</h5>  <!-- زیرعنوان. -->
+                    <ul class="list-group list-group-flush">  <!-- لیست بدون border. -->
+                        {% for item in results %}  <!-- loop روی results list از view. -->
+                            <li class="list-group-item d-flex justify-content-between align-items-center">  <!-- li با flex. -->
+                                <span>{{ item }}</span>  <!-- متن نتیجه. -->
+                                <span class="badge bg-primary rounded-pill">{{ forloop.counter }}</span>  <!-- شماره. -->
+                            </li>  <!-- پایان li. -->
+                        {% endfor %}  <!-- پایان loop. -->
+                    </ul>  <!-- پایان list. -->
+                </div>  <!-- پایان alert. -->
+                
+                <!-- احتمال ریسک – badge بزرگ. -->
+                <div class="mb-4">
+                    <h4 class="text-primary">احتمال نا موفق بودن رابطه: <span class="badge bg-danger fs-3">{{ prob|floatformat:0 }}%</span></h4>  <!-- badge خطر قرمز، fs-3 بزرگ. -->
+                </div>  <!-- پایان احتمال. -->
+                
+                <!-- نمودار Plotly – mt-4 فاصله. -->
+                <div class="mt-4 text-center">  <!-- div وسط. -->
+                    {{ chart|safe }}  <!-- chart HTML – safe برای JS. -->
+                </div>  <!-- پایان div. -->
+                
+                <!-- دکمه بازگشت. -->
+                <div class="mt-4 text-center">  <!-- div وسط. -->
+                    <a href="{% url 'welcome' %}" class="btn btn-secondary animate-fade-in-delay-2">بازگشت به خانه</a>  <!-- لینک به welcome – animate. -->
+                </div>  <!-- پایان div. -->
+            </div>  <!-- پایان body. -->
+        </div>  <!-- پایان card. -->
+    </div>  <!-- پایان col. -->
+</div>  <!-- پایان row. -->
+{% endblock %}  <!-- پایان block. -->
